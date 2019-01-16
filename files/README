@@ -1,0 +1,11 @@
+# Falls Libs nicht gefunden /etc/ld.so.conf.d/ neu einlesen  
+sudo ldconfig
+
+# Service in den Autostart
+sudo systemctl enable start_demo
+
+# Programm im Hintergrund starten (als Service)
+sudo systemctl start start_demo
+
+# Programm im Vordergrund starten (Cursorproblem)
+./start_demo

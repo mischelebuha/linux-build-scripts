@@ -1,0 +1,12 @@
+[Unit] 
+Description=Qt App 
+After=multi-user.target
+
+
+[Service] 
+Type=simple 
+WorkingDirectory=/home/debian 
+ExecStart=/home/debian/start_demo.sh
+
+[Install] 
+WantedBy=multi-user.target

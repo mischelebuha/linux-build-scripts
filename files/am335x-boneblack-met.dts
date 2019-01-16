@@ -1,0 +1,142 @@
+/*
+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+/dts-v1/;
+
+#include "am33xx.dtsi"
+#include "am335x-bone-common.dtsi"
+
+/ {
+	model = "TI AM335x BeagleBone Black";
+	compatible = "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
+};
+
+&ldo3_reg {
+	regulator-min-microvolt = <1800000>;
+	regulator-max-microvolt = <1800000>;
+	regulator-always-on;
+};
+
+&mmc1 {
+	vmmc-supply = <&vmmcsd_fixed>;
+};
+
+&mmc2 {
+	vmmc-supply = <&vmmcsd_fixed>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&emmc_pins>;
+	bus-width = <8>;
+	status = "okay";
+};
+
+&am33xx_pinmux {
+	lcd_pins_default: lcd_pins_default {
+		pinctrl-single,pins = <
+			0xe0 ( PIN_OUTPUT | MUX_MODE0 ) /* (U5) lcd_vsync.lcd_vsync */
+			0xe4 ( PIN_OUTPUT | MUX_MODE0 ) /* (R5) lcd_hsync.lcd_hsync */
+			0xe8 ( PIN_OUTPUT | MUX_MODE0 ) /* (V5) lcd_pclk.lcd_pclk */
+			0xec ( PIN_OUTPUT | MUX_MODE0 ) /* (R6) lcd_ac_bias_en.lcd_ac_bias_en */
+			0xa0 ( PIN_OUTPUT | MUX_MODE0 ) /* (R1) lcd_data0.lcd_data0 */
+			0xa4 ( PIN_OUTPUT | MUX_MODE0 ) /* (R2) lcd_data1.lcd_data1 */
+			0xa8 ( PIN_OUTPUT | MUX_MODE0 ) /* (R3) lcd_data2.lcd_data2 */
+			0xac ( PIN_OUTPUT | MUX_MODE0 ) /* (R4) lcd_data3.lcd_data3 */
+			0xb0 ( PIN_OUTPUT | MUX_MODE0 ) /* (T1) lcd_data4.lcd_data4 */
+			0xb4 ( PIN_OUTPUT | MUX_MODE0 ) /* (T2) lcd_data5.lcd_data5 */
+			0xb8 ( PIN_OUTPUT | MUX_MODE0 ) /* (T3) lcd_data6.lcd_data6 */
+			0xbc ( PIN_OUTPUT | MUX_MODE0 ) /* (T4) lcd_data7.lcd_data7 */
+			0xc0 ( PIN_OUTPUT | MUX_MODE0 ) /* (U1) lcd_data8.lcd_data8 */
+			0xc4 ( PIN_OUTPUT | MUX_MODE0 ) /* (U2) lcd_data9.lcd_data9 */
+			0xc8 ( PIN_OUTPUT | MUX_MODE0 ) /* (U3) lcd_data10.lcd_data10 */
+			0xcc ( PIN_OUTPUT | MUX_MODE0 ) /* (U4) lcd_data11.lcd_data11 */
+			0xd0 ( PIN_OUTPUT | MUX_MODE0 ) /* (V2) lcd_data12.lcd_data12 */
+			0xd4 ( PIN_OUTPUT | MUX_MODE0 ) /* (V3) lcd_data13.lcd_data13 */
+			0xd8 ( PIN_OUTPUT | MUX_MODE0 ) /* (V4) lcd_data14.lcd_data14 */
+			0xdc ( PIN_OUTPUT | MUX_MODE0 ) /* (T5) lcd_data15.lcd_data15 */
+			0x3c ( PIN_OUTPUT | MUX_MODE1 ) /* (U13) gpmc_ad15.lcd_data16 */
+			0x38 ( PIN_OUTPUT | MUX_MODE1 ) /* (V13) gpmc_ad14.lcd_data17 */
+			0x34 ( PIN_OUTPUT | MUX_MODE1 ) /* (R12) gpmc_ad13.lcd_data18 */
+			0x30 ( PIN_OUTPUT | MUX_MODE1 ) /* (T12) gpmc_ad12.lcd_data19 */
+			0x2c ( PIN_OUTPUT | MUX_MODE1 ) /* (U12) gpmc_ad11.lcd_data20 */
+			0x28 ( PIN_OUTPUT | MUX_MODE1 ) /* (T11) gpmc_ad10.lcd_data21 */
+			0x24 ( PIN_OUTPUT | MUX_MODE1 ) /* (T10) gpmc_ad9.lcd_data22 */
+			0x20 ( PIN_OUTPUT | MUX_MODE1 ) /* (U10) gpmc_ad8.lcd_data23 */
+		>;
+	};
+
+	touch_pins_default: touch_pins_default {
+		pinctrl-single,pins = <
+			0x17c ( PIN_INPUT_PULLUP | MUX_MODE3 ) /* (D17) uart1_rtsn.I2C2_SCL */
+			0x178 ( PIN_INPUT_PULLUP | MUX_MODE3 ) /* (D18) uart1_ctsn.I2C2_SDA */
+			0x70 ( PIN_INPUT | MUX_MODE7 ) /* (T17) gpmc_wait0.gpio0[30] */
+			0x74 ( PIN_OUTPUT | MUX_MODE7 ) /* (U17) gpmc_wpn.gpio0[31] */
+		>;
+	};
+};
+
+
+&lcdc {
+	status = "okay";
+};
+
+&i2c2 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&touch_pins_default>;
+	clock-frequency = <400000>;
+	ft6x06: ft6x06@38 {
+		compatible = "focaltech,ft6236";
+		reg = <0x38>;
+		status = "okay";
+		interrupt-parent = <&gpio0>;
+		interrupts = <30 2>;
+		touchscreen-size-x = <320>;
+		touchscreen-size-y = <240>;
+	};
+};
+
+/ {
+
+panel {
+                compatible = "ti,tilcdc,panel";
+                status = "okay";
+                pinctrl-names = "default";
+                pinctrl-0 = <&lcd_pins_default>;
+                panel-info {
+                        ac-bias           = <255>;
+                        ac-bias-intrpt    = <0>;
+                        dma-burst-sz      = <16>;
+                        bpp               = <24>;
+                        fdd               = <0x80>;
+                        sync-edge         = <0>;
+                        sync-ctrl         = <1>;
+                        raster-order      = <0>;
+                        fifo-th           = <0>;
+						tft-alt-mode      = <0>;
+						stn-565-mode      = <0>;
+						mono-8bit-mode    = <0>;
+						invert-pxl-clk;
+                };
+
+		display-timings {
+		 	320x240x62 {
+				clock-frequency = <6500000>;
+				hactive = <320>;
+				vactive = <240>;
+				hfront-porch = <20>;
+				hback-porch = <64>;
+				hsync-len = <2>;
+				vback-porch = <14>;
+				vfront-porch = <20>;
+				vsync-len = <4>;
+				hsync-active = <0>;
+				vsync-active = <0>;
+			};
+                };
+        };
+
+};
+

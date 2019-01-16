@@ -1,0 +1,2 @@
+
+SUBSYSTEM=="input", MODE="666",END

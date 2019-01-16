@@ -1,0 +1,9 @@
+#Für die Benutzung des QtQuick2DRenderer
+#export QMLSCENE_DEVICE=softwarecontext
+#export QT_QPA_PLATFORM=linuxfb
+#export QSG_RENDER_LOOP=basic
+
+
+export QT_IM_MODULE=qtvirtualkeyboard
+export QT_QUICK_CONTROLS_STYLE=Base
+
